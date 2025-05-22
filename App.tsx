@@ -12,11 +12,11 @@ import { Provider as PaperProvider } from 'react-native-paper';
 // Import screens
 import HomeScreen from './src/screens/HomeScreen';
 import StatsScreen from './src/screens/StatsScreen';
-// We'll implement these screens later - leaving authentication for last
 import NotificationsScreen from './src/screens/NotificationsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
+import ExportScreen from './src/screens/ExportScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -40,6 +40,7 @@ export default function App() {
                   <Stack.Screen name="Stats" component={StatsScreen} />
                   <Stack.Screen name="Notifications" component={NotificationsScreen} />
                   <Stack.Screen name="Profile" component={ProfileScreen} />
+                  <Stack.Screen name="Export" component={ExportScreen} />
                   <Stack.Screen 
                     name="Login" 
                     component={LoginScreen} 
@@ -50,7 +51,6 @@ export default function App() {
                     component={RegisterScreen}
                     options={{ headerShown: false }} 
                   />
-                 
                 </Stack.Navigator>
               </NavigationContainer>
             </PaperProvider>

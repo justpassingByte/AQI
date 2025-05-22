@@ -32,6 +32,7 @@ interface AirQualityContextType {
   isLoading: boolean;
   error: string | null;
   fetchAirQualityData: () => Promise<void>;
+  exportData: () => Promise<string>;
 }
 
 // Create context
@@ -154,6 +155,20 @@ export const AirQualityProvider: React.FC<{ children: ReactNode }> = ({ children
     }
   };
 
+  // Function to export data
+  const exportData = async (): Promise<string> => {
+    try {
+      const dataToExport = {
+        currentReading,
+        historicalData
+      };
+      return JSON.stringify(dataToExport, null, 2);
+    } catch (err) {
+      console.error('Error exporting data:', err);
+      throw new Error('Failed to export data');
+    }
+  };
+
   // Initial fetch when component mounts
   useEffect(() => {
     fetchAirQualityData();
@@ -167,6 +182,7 @@ export const AirQualityProvider: React.FC<{ children: ReactNode }> = ({ children
         isLoading,
         error,
         fetchAirQualityData,
+        exportData,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, TouchableOpacity, View, Image } from 'react-native';
 import { Appbar, Avatar, Button, Card, Divider, List, Modal, Portal, Snackbar, Switch, Text, TextInput } from 'react-native-paper';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -113,6 +113,26 @@ export default function ProfileScreen() {
       .substring(0, 2);
   };
 
+  const renderAvatar = () => {
+    if (user?.photo) {
+      return (
+        <Avatar.Image 
+          size={80} 
+          source={{ uri: user.photo }} 
+          style={styles.avatar}
+        />
+      );
+    } else {
+      return (
+        <Avatar.Text 
+          size={80} 
+          label={getInitials()} 
+          style={styles.avatar}
+        />
+      );
+    }
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Appbar.Header>
@@ -124,11 +144,7 @@ export default function ProfileScreen() {
         {user ? (
           <>
             <View style={[styles.userInfoContainer, { backgroundColor: isDarkMode ? '#1e1e1e' : '#ffffff' }]}>
-              <Avatar.Text 
-                size={80} 
-                label={getInitials()} 
-                style={styles.avatar}
-              />
+              {renderAvatar()}
               <Text variant="headlineSmall" style={[styles.userName, { color: isDarkMode ? '#ffffff' : '#333333' }]}>
                 {user?.name}
               </Text>
@@ -307,6 +323,7 @@ export default function ProfileScreen() {
                   textColor={isDarkMode ? '#ffffff' : '#333333'}
                   theme={{ colors: { onSurfaceVariant: isDarkMode ? '#aaaaaa' : '#666666' } }}
                   keyboardType="email-address"
+                  disabled={!!user?.photo} // Disable email editing for Google users
                 />
                 
                 <TextInput

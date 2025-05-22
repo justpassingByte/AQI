@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Alert, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { Appbar, Button, Card, Divider, RadioButton, Snackbar } from 'react-native-paper';
-import { useAirQuality } from '../../contexts/AirQualityContext';
+import { useAirQuality } from '../contexts/AirQualityContext';
 
 export default function ExportScreen() {
   const navigation = useNavigation();

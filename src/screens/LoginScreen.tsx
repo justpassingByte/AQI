@@ -1,13 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Button, Snackbar, TextInput } from 'react-native-paper';
+import { Button, Divider, Snackbar, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../contexts/AuthContext';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function LoginScreen() {
   const navigation = useNavigation();
-  const { signIn, isLoading } = useAuth();
+  const { signIn, signInWithGoogle, isLoading } = useAuth();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,6 +27,15 @@ export default function LoginScreen() {
       // Navigation will be handled by the AuthContext
     } catch (err) {
       setError('Invalid email or password');
+      setShowSnackbar(true);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      setError('Google sign in failed');
       setShowSnackbar(true);
     }
   };
@@ -76,6 +86,22 @@ export default function LoginScreen() {
               disabled={isLoading}
             >
               Log In
+            </Button>
+
+            <View style={styles.dividerContainer}>
+              <Divider style={styles.divider} />
+              <Text style={styles.orText}>OR</Text>
+              <Divider style={styles.divider} />
+            </View>
+
+            <Button
+              mode="outlined"
+              onPress={handleGoogleLogin}
+              style={styles.googleButton}
+              icon={() => <FontAwesome name="google" size={18} color="#DB4437" />}
+              disabled={isLoading}
+            >
+              Sign in with Google
             </Button>
             
             <TouchableOpacity
@@ -148,6 +174,28 @@ const styles = StyleSheet.create({
   loginButton: {
     marginTop: 8,
     paddingVertical: 6,
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#e0e0e0',
+  },
+  orText: {
+    marginHorizontal: 16,
+    color: '#666',
+    fontSize: 14,
+  },
+  googleButton: {
+    marginTop: 8,
+    paddingVertical: 8,
+    borderColor: '#DB4437',
+    borderWidth: 1,
   },
   registerLink: {
     marginTop: 24,

@@ -2,13 +2,14 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Button, Snackbar, TextInput } from 'react-native-paper';
+import { Button, Divider, Snackbar, TextInput } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../contexts/AuthContext';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function RegisterScreen() {
   const navigation = useNavigation();
-  const { signUp, isLoading } = useAuth();
+  const { signUp, signInWithGoogle, isLoading } = useAuth();
   
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -46,6 +47,16 @@ export default function RegisterScreen() {
       // Navigation will be handled by the AuthContext
     } catch (err) {
       setError('Registration failed. Please try again.');
+      setShowSnackbar(true);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      await signInWithGoogle();
+      // Google sign in will also work for registration
+    } catch (err) {
+      setError('Google sign up failed');
       setShowSnackbar(true);
     }
   };
@@ -132,6 +143,22 @@ export default function RegisterScreen() {
               Register
             </Button>
 
+            <View style={styles.dividerContainer}>
+              <Divider style={styles.divider} />
+              <Text style={styles.orText}>OR</Text>
+              <Divider style={styles.divider} />
+            </View>
+
+            <Button
+              mode="outlined"
+              onPress={handleGoogleSignUp}
+              style={styles.googleButton}
+              icon={() => <FontAwesome name="google" size={18} color="#DB4437" />}
+              disabled={isLoading}
+            >
+              Sign up with Google
+            </Button>
+
             <TouchableOpacity
               onPress={() => navigation.navigate('Login' as never)}
               style={styles.loginLink}
@@ -209,6 +236,28 @@ const styles = StyleSheet.create({
   registerButton: {
     marginTop: 8,
     paddingVertical: 6,
+  },
+  dividerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 16,
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#e0e0e0',
+  },
+  orText: {
+    marginHorizontal: 16,
+    color: '#666',
+    fontSize: 14,
+  },
+  googleButton: {
+    marginTop: 8,
+    paddingVertical: 8,
+    borderColor: '#DB4437',
+    borderWidth: 1,
   },
   loginLink: {
     marginTop: 24,
