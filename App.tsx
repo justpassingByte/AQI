@@ -1,20 +1,62 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ThemeProvider } from './src/contexts/ThemeContext';
+import { AuthProvider } from './src/contexts/AuthContext';
+import { AirQualityProvider } from './src/contexts/AirQualityContext';
+import { RootStackParamList } from './src/types';
+import { Provider as PaperProvider } from 'react-native-paper';
+
+// Import screens
+import HomeScreen from './src/screens/HomeScreen';
+import StatsScreen from './src/screens/StatsScreen';
+// We'll implement these screens later - leaving authentication for last
+import NotificationsScreen from './src/screens/NotificationsScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AirQualityProvider>
+            <PaperProvider>
+              <NavigationContainer>
+                <StatusBar style="auto" />
+                <Stack.Navigator 
+                  initialRouteName="Home"
+                  screenOptions={{ 
+                    headerShown: false,
+                    animation: 'slide_from_right'
+                  }}
+                >
+                  <Stack.Screen name="Home" component={HomeScreen} />
+                  <Stack.Screen name="Stats" component={StatsScreen} />
+                  <Stack.Screen name="Notifications" component={NotificationsScreen} />
+                  <Stack.Screen name="Profile" component={ProfileScreen} />
+                  <Stack.Screen 
+                    name="Login" 
+                    component={LoginScreen} 
+                    options={{ headerShown: false }} 
+                  />
+                  <Stack.Screen 
+                    name="Register" 
+                    component={RegisterScreen}
+                    options={{ headerShown: false }} 
+                  />
+                 
+                </Stack.Navigator>
+              </NavigationContainer>
+            </PaperProvider>
+          </AirQualityProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
